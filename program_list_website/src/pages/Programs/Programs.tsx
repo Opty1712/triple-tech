@@ -6,28 +6,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useEffect, useState } from 'react';
 
-type Program = {
-  id: number;
-  name: string;
-  return_percentage: string;
-  threshold: number;
-  status: string;
-  pause_at: string | null;
-};
-
-async function getPrograms<T = Program[]>(): Promise<T> {
-  const response = await fetch(`http://localhost:4002/programs`, {
-    method: 'GET',
-  }).catch((error) => console.error(error));
-
-  if (!response?.ok) {
-    throw new Error(response?.statusText);
-  }
-
-  return await (response.json() as Promise<T>);
-}
-
-const Programs = () => {
+export const Programs = () => {
   const [programs, setPrograms] = useState<Program[]>([]);
   useEffect(() => {
     async function loadPeople() {
@@ -69,4 +48,23 @@ const Programs = () => {
   );
 };
 
-export default Programs;
+type Program = {
+  id: number;
+  name: string;
+  return_percentage: string;
+  threshold: number;
+  status: string;
+  pause_at: string | null;
+};
+
+async function getPrograms<T = Program[]>(): Promise<T> {
+  const response = await fetch(`http://localhost:4002/programs`, {
+    method: 'GET',
+  }).catch((error) => console.error(error));
+
+  if (!response?.ok) {
+    throw new Error(response?.statusText);
+  }
+
+  return await (response.json() as Promise<T>);
+}

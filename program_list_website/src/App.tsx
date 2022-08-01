@@ -1,6 +1,6 @@
 import Container from '@mui/material/Container';
-import AppHeader from './components/AppHeader';
-import Programs from './pages/Programs';
+import { AppHeader } from './components';
+import { Programs } from './pages';
 
 const App = () => {
   return (
