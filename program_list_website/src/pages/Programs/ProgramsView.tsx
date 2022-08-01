@@ -24,21 +24,19 @@ export const ProgramsView = memo<ProgramsViewProps>(
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell component="th">Name</TableCell>
-              <TableCell component="th">Cashback</TableCell>
-              <TableCell component="th">Threshold</TableCell>
-              <TableCell component="th">Status</TableCell>
-              <TableCell component="th">Pause Date</TableCell>
+              {columns.map(({ name }, index) => (
+                <TableCell component="th" key={name + index}>
+                  {name}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
             {programs.map((program) => (
               <tr key={program.id}>
-                <TableCell>{program.name}</TableCell>
-                <TableCell>{program.return_percentage}</TableCell>
-                <TableCell>{program.threshold}</TableCell>
-                <TableCell>{program.status}</TableCell>
-                <TableCell>{program.pause_at}</TableCell>
+                {columns.map(({ key }, index) => (
+                  <TableCell key={key + index}>{program[key]}</TableCell>
+                ))}
               </tr>
             ))}
           </TableBody>
@@ -48,3 +46,16 @@ export const ProgramsView = memo<ProgramsViewProps>(
   }
 );
 ProgramsView.displayName = 'Programs';
+
+type ProgramColumn = {
+  key: keyof Program;
+  name: string;
+};
+
+const columns: Array<ProgramColumn> = [
+  { name: 'Name', key: 'name' },
+  { name: 'Cashback', key: 'return_percentage' },
+  { name: 'Threshold', key: 'threshold' },
+  { name: 'Status', key: 'status' },
+  { name: 'Pause Date', key: 'pause_at' },
+];
