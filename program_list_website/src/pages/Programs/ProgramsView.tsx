@@ -7,11 +7,11 @@ import {
   TableRow,
 } from '@mui/material';
 import { memo } from 'react';
-import { Program } from './types';
+import { VisibleColumns } from './types';
 
 type ProgramsViewProps = {
   isLoading: boolean;
-  programs: Program[];
+  programs: VisibleColumns[];
 };
 export const ProgramsView = memo<ProgramsViewProps>(
   ({ isLoading, programs }) => {
@@ -48,7 +48,7 @@ export const ProgramsView = memo<ProgramsViewProps>(
 ProgramsView.displayName = 'Programs';
 
 type ProgramColumn = {
-  key: keyof Program;
+  key: keyof VisibleColumns;
   name: string;
 };
 
