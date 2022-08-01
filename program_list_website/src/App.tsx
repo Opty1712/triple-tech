@@ -1,8 +1,8 @@
-import Container from '@mui/material/Container';
+import { Container } from '@mui/material';
 import { AppHeader } from './components';
 import { Programs } from './pages';
 
-const App = () => {
+export const App = () => {
   return (
     <>
       <AppHeader />
@@ -15,5 +15,3 @@ const App = () => {
     </>
   );
 };
-
-export default App;

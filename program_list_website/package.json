@@ -48,7 +48,7 @@
     "lint:eslint": "eslint --ext .js,.jsx,.ts,.tsx ./ --color --cache",
     "lint:prettier": "prettier -c ./",
     "lint:stylelint": "stylelint **/*.{ts,tsx}",
-    "healthcheck": "yarn lint && yarn build"
+    "healthcheck": "yarn lint && yarn test && yarn build"
   },
   "eslintConfig": {
     "extends": [
