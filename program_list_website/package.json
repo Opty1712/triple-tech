@@ -12,7 +12,6 @@
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.5",
     "styled-normalize": "^8.0.7",
-    "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
@@ -27,7 +26,14 @@
     "concurrently": "^5.3.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.4.1",
-    "prettier": "^2.7.0"
+    "prettier": "^2.7.0",
+    "stylelint": "^13.12.0",
+    "stylelint-config-standard": "^21.0.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-order": "^4.1.0",
+    "stylelint-processor-styled-components": "^1.10.0",
+    "ts-nameof": "^5.0.0",
+    "typescript": "^4.7.4"
   },
   "scripts": {
     "seed-db": "node src/server/initDb",
@@ -37,7 +43,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "postinstall": "npm run seed-db",
-    "lint": "yarn lint:ts && yarn lint:commitlint && yarn lint:prettier && yarn lint:eslint && yarn lint:stylelint",
+    "lint": "yarn lint:ts && yarn lint:prettier && yarn lint:eslint && yarn lint:stylelint",
     "lint:ts": "tsc",
     "lint:eslint": "eslint --ext .js,.jsx,.ts,.tsx ./ --color --cache",
     "lint:prettier": "prettier -c ./",
