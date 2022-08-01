@@ -13,6 +13,7 @@ export const usePrograms = () => {
 
       await getPrograms()
         .then((programs) => setPrograms(adaptPrograms(programs)))
+        .catch((error) => console.error(error))
         .finally(() => setIsLoading(false));
     }
 

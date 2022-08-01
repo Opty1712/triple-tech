@@ -13,6 +13,7 @@ type ProgramsViewProps = {
   isLoading: boolean;
   programs: VisibleColumns[];
 };
+
 export const ProgramsView = memo<ProgramsViewProps>(
   ({ isLoading, programs }) => {
     if (isLoading) {
