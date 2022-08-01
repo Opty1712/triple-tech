@@ -1,19 +1,34 @@
-import React, { useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { useEffect, useState } from 'react';
 
-async function getPrograms() {
-  return fetch(`http://localhost:4002/programs`, { meTableCellod: 'GET' }).then((response) =>
-    response.json()
-  );
+type Program = {
+  id: number;
+  name: string;
+  return_percentage: string;
+  threshold: number;
+  status: string;
+  pause_at: string | null;
+};
+
+async function getPrograms<T = Program[]>(): Promise<T> {
+  const response = await fetch(`http://localhost:4002/programs`, {
+    method: 'GET',
+  }).catch((error) => console.error(error));
+
+  if (!response?.ok) {
+    throw new Error(response?.statusText);
+  }
+
+  return await (response.json() as Promise<T>);
 }
 
 const Programs = () => {
-  const [programs, setPrograms] = useState(null);
+  const [programs, setPrograms] = useState<Program[]>([]);
   useEffect(() => {
     async function loadPeople() {
       const programs = await getPrograms();
