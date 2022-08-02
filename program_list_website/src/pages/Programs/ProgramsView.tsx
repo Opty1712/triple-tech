@@ -10,7 +10,7 @@ import { memo } from 'react';
 import { Filters, FiltersParams } from './FIlters';
 import { VisibleColumns } from './types';
 
-type ProgramsViewProps = FiltersParams & {
+export type ProgramsViewProps = FiltersParams & {
   isLoading: boolean;
   programs: VisibleColumns[];
 };

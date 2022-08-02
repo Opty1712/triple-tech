@@ -20,6 +20,7 @@ function useStatusFilter(
 export const StatusFilter = memo<StatusFilterParams>(
   ({ changeStatus, checked, name }) => {
     const { handleStatusChange } = useStatusFilter(changeStatus, name);
+
     return (
       <StatusFilterView
         name={name}

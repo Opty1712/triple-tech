@@ -1,7 +1,8 @@
 import { ChangeEventHandler, useCallback, useEffect, useState } from 'react';
-import { getKeys } from '../../utils';
-import { emptyColumn, statusMapper } from './constants';
-import { Program, StatusStorage, VisibleColumns } from './types';
+import { getKeys } from '../../../utils';
+import { emptyColumn, statusMapper } from '../constants';
+import { Program, StatusStorage, VisibleColumns } from '../types';
+import { FetchProgramParams, getPrograms } from './getPrograms';
 
 export const usePrograms = () => {
   const [programs, setPrograms] = useState<VisibleColumns[]>([]);
@@ -37,7 +38,7 @@ export const usePrograms = () => {
       await getPrograms({ name, status: adaptStatus(status) })
         .then((programs) => setPrograms(adaptPrograms(programs)))
         .catch((error) => {
-          throw new Error(error);
+          console.error(error);
         })
         .finally(() => setIsLoading(false));
     }
@@ -48,36 +49,12 @@ export const usePrograms = () => {
   return { programs, isLoading, handleNameChange, name, status, changeStatus };
 };
 
-type FetchProgramParams = {
-  status?: Array<Program['status']>;
-  name?: string;
-};
-
-async function getPrograms<T = Program[]>(
-  params: FetchProgramParams
-): Promise<T> {
-  const response = await fetch(
-    `http://localhost:4002/programs?${buildQuery(params)}`,
-    {
-      method: 'GET',
-    }
-  ).catch((error) => {
-    throw new Error(error);
-  });
-
-  if (!response?.ok) {
-    throw new Error(response?.statusText || 'Unknown error');
-  }
-
-  return await (response.json() as Promise<T>);
-}
-
 type ColumnFormatters = Record<
   keyof VisibleColumns,
   (value: Program) => string
 >;
 
-const columnFormatters: ColumnFormatters = {
+export const columnFormatters: ColumnFormatters = {
   id: (program: Program) => String(program.id),
   name: (program: Program) => program.name,
   return_percentage: (program: Program) => program.return_percentage,
@@ -134,30 +111,10 @@ export const adaptProgram = (program: Program): VisibleColumns => {
   return formattedProgram;
 };
 
-const checkIsKeyOfVisibleProgram = (
+export const checkIsKeyOfVisibleProgram = (
   value: string
 ): value is keyof VisibleColumns => {
   return value in emptyColumn;
-};
-
-export const buildQuery = (args: FetchProgramParams): string => {
-  const queryArray = getKeys(args).reduce<Array<string>>((accumulator, key) => {
-    const value = args[key];
-
-    if (Array.isArray(value)) {
-      value.forEach((item) => {
-        accumulator.push(`${key}=${item}`);
-      });
-    }
-
-    if (typeof value === 'string') {
-      accumulator.push(`${key}_like=${value}`);
-    }
-
-    return accumulator;
-  }, []);
-
-  return queryArray.join('&');
 };
 
 export const adaptStatus = (
