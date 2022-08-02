@@ -16,7 +16,7 @@
     "lint:eslint": "eslint --ext .js,.jsx,.ts,.tsx ./ --color --cache",
     "lint:prettier": "prettier -c ./",
     "lint:stylelint": "stylelint **/*.{ts,tsx}",
-    "healthcheck": "npm run lint && npm run test && npm run build"
+    "healthcheck": "npm run lint && npm run test:coverage && npm run build"
   },
   "dependencies": {
     "@emotion/css": "^11.10.0",
