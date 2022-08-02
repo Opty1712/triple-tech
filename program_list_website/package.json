@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/css": "^11.10.0",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@mui/material": "^5.8.4",
@@ -40,14 +41,15 @@
     "start": "npm run seed-db && concurrently \"npm run server\" \"PORT=3002 react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:coverage": "npm run test -- --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "postinstall": "npm run seed-db",
-    "lint": "yarn lint:ts && yarn lint:prettier && yarn lint:eslint && yarn lint:stylelint",
+    "lint": "npm run lint:ts && npm run lint:prettier && npm run lint:eslint && npm run lint:stylelint",
     "lint:ts": "tsc",
     "lint:eslint": "eslint --ext .js,.jsx,.ts,.tsx ./ --color --cache",
     "lint:prettier": "prettier -c ./",
     "lint:stylelint": "stylelint **/*.{ts,tsx}",
-    "healthcheck": "yarn lint && yarn test && yarn build"
+    "healthcheck": "npm run lint && npm run test && npm run build"
   },
   "eslintConfig": {
     "extends": [

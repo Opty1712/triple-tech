@@ -1,35 +1,67 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getKeys } from '../../utils';
 import { emptyColumn, statusMapper } from './constants';
 import { Program, VisibleColumns } from './types';
 
+type StatusStorage = Record<Program['status'], boolean>;
+
 export const usePrograms = () => {
   const [programs, setPrograms] = useState<VisibleColumns[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState('');
+  const [status, setStatus] = useState<StatusStorage>({
+    ACTIVE: false,
+    PAUSE_SCHEDULED: false,
+    PAUSED: false,
+  });
+
+  const changeStatus = useCallback(
+    (status: Program['status'], isChecked: boolean) => {
+      setStatus((value) => ({
+        ...value,
+        [status]: isChecked,
+      }));
+    },
+    []
+  );
 
   useEffect(() => {
     async function loadPeople() {
       setIsLoading(true);
 
-      await getPrograms()
+      await getPrograms({ name, status: adaptStatus(status) })
         .then((programs) => setPrograms(adaptPrograms(programs)))
-        .catch((error) => console.error(error))
+        .catch((error) => {
+          throw new Error(error);
+        })
         .finally(() => setIsLoading(false));
     }
 
     loadPeople();
-  }, []);
+  }, [name, status]);
 
-  return { programs, isLoading };
+  return { programs, isLoading, setName, name, status, changeStatus };
 };
 
-async function getPrograms<T = Program[]>(): Promise<T> {
-  const response = await fetch(`http://localhost:4002/programs`, {
-    method: 'GET',
-  }).catch((error) => console.error(error));
+type FetchProgramParams = {
+  status?: Array<Program['status']>;
+  name?: string;
+};
+
+async function getPrograms<T = Program[]>(
+  params: FetchProgramParams
+): Promise<T> {
+  const response = await fetch(
+    `http://localhost:4002/programs?${buildQuery(params)}`,
+    {
+      method: 'GET',
+    }
+  ).catch((error) => {
+    throw new Error(error);
+  });
 
   if (!response?.ok) {
-    throw new Error(response?.statusText);
+    throw new Error(response?.statusText || 'Unknown error');
   }
 
   return await (response.json() as Promise<T>);
@@ -102,3 +134,28 @@ const checkIsKeyOfVisibleProgram = (
 ): value is keyof VisibleColumns => {
   return value in emptyColumn;
 };
+
+export const buildQuery = (args: FetchProgramParams): string => {
+  const queryArray = getKeys(args).reduce<Array<string>>((accumulator, key) => {
+    const value = args[key];
+
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        accumulator.push(`${key}=${item}`);
+      });
+    }
+
+    if (typeof value === 'string') {
+      accumulator.push(`${key}_like=${value}`);
+    }
+
+    return accumulator;
+  }, []);
+
+  return queryArray.join('&');
+};
+
+export const adaptStatus = (
+  status: StatusStorage
+): FetchProgramParams['status'] =>
+  getKeys(status).filter((item) => status[item]);
