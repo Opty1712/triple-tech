@@ -239,13 +239,14 @@ describe('usePrograms', () => {
   });
 
   it('correctly reacts on error in request', async () => {
-    (getPrograms as any).mockReturnValue(Promise.reject({ error: 'error' }));
+    const error = 'error';
+    (getPrograms as any).mockReturnValue(Promise.reject({ error }));
 
     const { result, waitFor } = renderHook(() => usePrograms());
 
     await waitFor(() => result.current.isLoading === false);
 
     expect(result.current.programs).toEqual([]);
-    expect(consoleError).toHaveBeenCalledWith({ error: 'error' });
+    expect(consoleError).toHaveBeenCalledWith({ error });
   });
 });
