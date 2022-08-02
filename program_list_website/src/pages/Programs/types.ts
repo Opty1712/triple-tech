@@ -12,3 +12,5 @@ export type VisibleColumns = Pick<
   Program,
   'name' | 'pause_at' | 'return_percentage'
 > & { threshold: string; id: string; status: string };
+
+export type StatusStorage = Record<Program['status'], boolean>;

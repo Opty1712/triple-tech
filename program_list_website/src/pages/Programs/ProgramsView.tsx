@@ -7,7 +7,7 @@ import {
   TableRow,
 } from '@mui/material';
 import { memo } from 'react';
-import { Filters, FiltersParams } from './FIlters/Filters';
+import { Filters, FiltersParams } from './FIlters';
 import { VisibleColumns } from './types';
 
 type ProgramsViewProps = FiltersParams & {
@@ -16,12 +16,12 @@ type ProgramsViewProps = FiltersParams & {
 };
 
 export const ProgramsView = memo<ProgramsViewProps>(
-  ({ isLoading, programs, name, setName, changeStatus, status }) => {
+  ({ isLoading, programs, name, handleNameChange, changeStatus, status }) => {
     return (
       <div>
         <Filters
           name={name}
-          setName={setName}
+          handleNameChange={handleNameChange}
           status={status}
           changeStatus={changeStatus}
         />

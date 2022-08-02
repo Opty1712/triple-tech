@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { ChangeEventHandler, useCallback, useEffect, useState } from 'react';
 import { getKeys } from '../../utils';
 import { emptyColumn, statusMapper } from './constants';
-import { Program, VisibleColumns } from './types';
-
-type StatusStorage = Record<Program['status'], boolean>;
+import { Program, StatusStorage, VisibleColumns } from './types';
 
 export const usePrograms = () => {
   const [programs, setPrograms] = useState<VisibleColumns[]>([]);
@@ -14,6 +12,13 @@ export const usePrograms = () => {
     PAUSE_SCHEDULED: false,
     PAUSED: false,
   });
+
+  const handleNameChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (event) => {
+      setName(event.target.value);
+    },
+    [setName]
+  );
 
   const changeStatus = useCallback(
     (status: Program['status'], isChecked: boolean) => {
@@ -40,7 +45,7 @@ export const usePrograms = () => {
     loadPeople();
   }, [name, status]);
 
-  return { programs, isLoading, setName, name, status, changeStatus };
+  return { programs, isLoading, handleNameChange, name, status, changeStatus };
 };
 
 type FetchProgramParams = {
