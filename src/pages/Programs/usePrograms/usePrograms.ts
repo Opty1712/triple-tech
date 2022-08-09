@@ -1,11 +1,5 @@
-import debounce from 'lodash.debounce';
-import {
-  ChangeEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { debounce } from 'lodash';
+import { ChangeEventHandler, useCallback, useEffect, useRef, useState } from 'react';
 import { getKeys } from '../../../utils';
 import { emptyColumn, statusMapper } from '../constants';
 import { Program, StatusStorage, VisibleColumns } from '../types';
@@ -28,18 +22,15 @@ export const usePrograms = () => {
     [setName]
   );
 
-  const changeStatus = useCallback(
-    (status: Program['status'], isChecked: boolean) => {
-      setStatus((value) => ({
-        ...value,
-        [status]: isChecked,
-      }));
-    },
-    []
-  );
+  const changeStatus = useCallback((status: Program['status'], isChecked: boolean) => {
+    setStatus((value) => ({
+      ...value,
+      [status]: isChecked,
+    }));
+  }, []);
 
   const loadPeople = useRef(
-    debounce(async () => {
+    debounce(async (name: string, status: StatusStorage) => {
       setIsLoading(true);
 
       await getPrograms({ name, status: adaptStatus(status) })
@@ -52,7 +43,7 @@ export const usePrograms = () => {
   );
 
   useEffect(() => {
-    loadPeople.current();
+    loadPeople.current(name, status);
   }, [name, status]);
 
   return {
@@ -65,10 +56,7 @@ export const usePrograms = () => {
   };
 };
 
-type ColumnFormatters = Record<
-  keyof VisibleColumns,
-  (value: Program) => string
->;
+type ColumnFormatters = Record<keyof VisibleColumns, (value: Program) => string>;
 
 export const columnFormatters: ColumnFormatters = {
   id: (program: Program) => String(program.id),
@@ -80,8 +68,7 @@ export const columnFormatters: ColumnFormatters = {
       currency: program.currency,
     }).format(program.threshold / 100),
   status: (program: Program) => statusMapper[program.status],
-  pause_at: (program: Program) =>
-    program.pause_at ? formatDate(program.pause_at) : '-',
+  pause_at: (program: Program) => (program.pause_at ? formatDate(program.pause_at) : '-'),
 };
 
 export const formatDate = (date: string): string => {
@@ -106,8 +93,7 @@ export const formatDate = (date: string): string => {
   }
 };
 
-export const adaptPrograms = (programs: Program[]): VisibleColumns[] =>
-  programs.map(adaptProgram);
+export const adaptPrograms = (programs: Program[]): VisibleColumns[] => programs.map(adaptProgram);
 
 export const adaptProgram = (program: Program): VisibleColumns => {
   const keys = getKeys(program);
@@ -127,13 +113,9 @@ export const adaptProgram = (program: Program): VisibleColumns => {
   return formattedProgram;
 };
 
-export const checkIsKeyOfVisibleProgram = (
-  value: string
-): value is keyof VisibleColumns => {
+export const checkIsKeyOfVisibleProgram = (value: string): value is keyof VisibleColumns => {
   return value in emptyColumn;
 };
 
-export const adaptStatus = (
-  status: StatusStorage
-): FetchProgramParams['status'] =>
+export const adaptStatus = (status: StatusStorage): FetchProgramParams['status'] =>
   getKeys(status).filter((item) => status[item]);
