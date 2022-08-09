@@ -168,7 +168,7 @@ describe('usePrograms', () => {
 
     /** checks initial state */
     expect(result.current.name).toBe('');
-    expect(result.current.isLoading).toBe(true);
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.programs).toEqual([]);
     expect(result.current.status).toEqual({
       ACTIVE: false,
@@ -240,7 +240,9 @@ describe('usePrograms', () => {
 
   it('correctly reacts on error in request', async () => {
     const error = 'error';
-    (getPrograms as any).mockReturnValue(Promise.reject({ error }));
+    (getPrograms as any).mockReturnValue(
+      Promise.reject({ error }).catch((e) => console.error(e))
+    );
 
     const { result, waitFor } = renderHook(() => usePrograms());
 
