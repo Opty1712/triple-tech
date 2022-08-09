@@ -1,4 +1,11 @@
-import { ChangeEventHandler, useCallback, useEffect, useState } from 'react';
+import debounce from 'lodash.debounce';
+import {
+  ChangeEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { getKeys } from '../../../utils';
 import { emptyColumn, statusMapper } from '../constants';
 import { Program, StatusStorage, VisibleColumns } from '../types';
@@ -31,8 +38,8 @@ export const usePrograms = () => {
     []
   );
 
-  useEffect(() => {
-    async function loadPeople() {
+  const loadPeople = useRef(
+    debounce(async () => {
       setIsLoading(true);
 
       await getPrograms({ name, status: adaptStatus(status) })
@@ -41,12 +48,21 @@ export const usePrograms = () => {
           console.error(error);
         })
         .finally(() => setIsLoading(false));
-    }
+    }, 500)
+  );
 
-    loadPeople();
+  useEffect(() => {
+    loadPeople.current();
   }, [name, status]);
 
-  return { programs, isLoading, handleNameChange, name, status, changeStatus };
+  return {
+    programs,
+    isLoading,
+    handleNameChange,
+    name,
+    status,
+    changeStatus,
+  };
 };
 
 type ColumnFormatters = Record<
