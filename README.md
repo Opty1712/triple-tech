@@ -1,3 +1,7 @@
+# The Solution
+
+→→→→→→→→→→ 🔥 **Take a look at [this PR](https://github.com/Opty1712/triple-tech/pull/1)** 🔥 ←←←←←←←←←←
+
 # Frontend exercise
 
 Hello! Thank you for taking the Triple frontend exercise. The goal is to implement a simple feature in a given code.
