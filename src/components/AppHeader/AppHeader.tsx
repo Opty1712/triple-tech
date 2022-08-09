@@ -1,9 +1,7 @@
-import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+import { AppBar, Toolbar, Typography } from '@mui/material';
+import { memo } from 'react';
 
-const AppHeader = () => {
+export const AppHeader = memo(() => {
   return (
     <AppBar
       position="absolute"
@@ -21,6 +19,5 @@ const AppHeader = () => {
       </Toolbar>
     </AppBar>
   );
-};
-
-export default AppHeader;
+});
+AppHeader.displayName = 'AppHeader';
